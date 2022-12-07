@@ -23,7 +23,8 @@ You just need to provide callback routines for pause(), resume(), and display().
 
 <p>
 ACKNOWLEDGEMENT: Matrix Rain animation **DigitalRainAnim** is from the project 
-hosted on github: [MatrixRain](https://github.com/delhoume/MatrixRain)
+hosted on github: 
+[MatrixRain](https://github.com/delhoume/MatrixRain)
 </p>
 
 <p>
