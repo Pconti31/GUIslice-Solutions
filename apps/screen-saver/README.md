@@ -23,10 +23,9 @@ You just need to provide callback routines for pause(), resume(), and display().
 
 <p>
 ACKNOWLEDGEMENT: Matrix Rain animation **DigitalRainAnim** is from the project 
-hosted on github: 
-[MatrixRain](https://github.com/delhoume/MatrixRain)
+MatrixRain hosted on github: https://github.com/delhoume/MatrixRain
 </p>
-
+ 
 <p>
 This sample is set for ESP32 using TFT_eSPI library and a standard 
 480x320 pixel display. If you avoid using the library DigitalRainAnim 
