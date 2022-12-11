@@ -22,7 +22,7 @@ with GUIslice API so you can notice the difference.
 </p>
 
 <p>
-To install my version simply copy XGraph.<c h> inside the sub-folder "elem" 
+To install my version simply copy XGraph.c  XGraph.h inside the subfolder "elem" 
 to your GUIslice/src/elem folder overwriting the original versions. 
 </p>
 
