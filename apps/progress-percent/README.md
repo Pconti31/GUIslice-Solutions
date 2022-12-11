@@ -3,8 +3,8 @@
 
 <p>
 Supplies a modified GUIslice XProgress extended control that will display
-the perecent completed inside the progress bar.
-<\p>
+the percent completed inside the progress bar.
+</p>
 
 ![](sample-graphs.png)
 
