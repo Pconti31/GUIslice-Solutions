@@ -57,7 +57,7 @@ it will also ignore the new feature.
 
 <p>
 To install this version simply delete GUIslice/src/elem/XProgress.h and XProgress.c
-and copy XProgress.<cpp h> inside the sub-folder "elem" to your GUIslice/src/elem folder. 
+and copy XProgress.cpp and XProgress.h inside the subfolder "elem" to your GUIslice/src/elem folder. 
 </p>
 
 <p>
