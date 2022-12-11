@@ -4,7 +4,7 @@
 Demonstrates how to display your graphs without any major flicker.
 
 <p>
-This was oroginally a simple demonstration of how to use the extended element
+This was originally a simple demonstration of how to use the extended element
 XGraph since people kept asking how to use it.  Hpwever, I found the screen flicker
 so annoying that I finally modified the original XGraph code to erase old data 
 before display new data. If you run this on a ESP32 no flicker will be noticeable. 
