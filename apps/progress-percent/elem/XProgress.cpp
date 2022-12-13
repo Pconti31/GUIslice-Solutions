@@ -71,7 +71,7 @@ extern const char GSLC_PMEM ERRSTR_PXD_NULL[];
 
 bool gslc_ElemXProgressDrawHelpNew(gslc_tsGui* pGui,gslc_tsElemRef* pElemRef,gslc_tsXProgress* pGauge,gslc_teRedrawType eRedraw);
 bool gslc_ElemXProgressDrawHelpOld(gslc_tsGui* pGui,gslc_tsElemRef* pElemRef,gslc_tsXProgress* pGauge,gslc_teRedrawType eRedraw);
-uint16_t colorToRaw(gslc_tsColor nCol);
+uint16_t XProgressColorToRaw(gslc_tsColor nCol);
 
 
 // ----------------------------------------------------------------------------
@@ -412,15 +412,15 @@ bool gslc_ElemXProgressDrawHelpNew(gslc_tsGui* pGui,gslc_tsElemRef* pElemRef,
 
   pSpr->createSprite(rInner.w, rInner.h);
   
-  pSpr->fillSprite(colorToRaw(pElem->colElemFill));
+  pSpr->fillSprite(XProgressColorToRaw(pElem->colElemFill));
 
   // Draw the gauge fill region
   if (nPercent > 0) {
     if (pElem->nFeatures & GSLC_ELEM_FEA_ROUND_EN) {
       pSpr->fillRoundRect(nGaugeX0,nGaugeY0,nGaugeW,nGaugeH,
-        (int32_t)pGui->nRoundRadius,colorToRaw(pGauge->colGauge));
+        (int32_t)pGui->nRoundRadius,XProgressColorToRaw(pGauge->colGauge));
     } else {
-      pSpr->fillRect(nGaugeX0,nGaugeY0,nGaugeW,nGaugeH,colorToRaw(pGauge->colGauge));
+      pSpr->fillRect(nGaugeX0,nGaugeY0,nGaugeW,nGaugeH,XProgressColorToRaw(pGauge->colGauge));
     }
   }
 
@@ -433,7 +433,7 @@ bool gslc_ElemXProgressDrawHelpNew(gslc_tsGui* pGui,gslc_tsElemRef* pElemRef,
   }
   
   // Set the font colour and the background colour
-  pSpr->setTextColor(colorToRaw(pElem->colElemText), colorToRaw(pGauge->colGauge));
+  pSpr->setTextColor(XProgressColorToRaw(pElem->colElemText), XProgressColorToRaw(pGauge->colGauge));
   char acPercent[6];
   sprintf(acPercent,"%d%s",nPercent,"%");
   pSpr->setCursor(rText.x,rText.y);
@@ -648,7 +648,7 @@ bool gslc_ElemXProgressDrawHelpOld(gslc_tsGui* pGui,gslc_tsElemRef* pElemRef,
 
 // Convert from RGB struct to native screen format
 // TODO: Use 32bit return type?
-uint16_t colorToRaw(gslc_tsColor nCol)
+uint16_t XProgressColorToRaw(gslc_tsColor nCol)
 {
   uint16_t nColRaw = 0;
 

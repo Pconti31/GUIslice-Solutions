@@ -65,12 +65,11 @@ extern const char GSLC_PMEM ERRSTR_PXD_NULL[];
 // ----------------------------------------------------------------------------
 
 // ============================================================================
-// Extended Element: TabBtn
-// - TabBtn with custom handler for touch which
+// Extended Element: XTabBtn
+// - tab button with custom handler for touch which
 //   sets glow once a button pressed on and remains glowing
 //   until the button is pressed again thus the toggle effect.
-//   Once selected a jump to nJumpPage will occur automatically.
-//   Just like radio buttons tab buttons can be grouped
+//   Just like radio buttons toggle buttons can be grouped
 //   making them an ideal choice for tabs on a base page.
 // ============================================================================
 

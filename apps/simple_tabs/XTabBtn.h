@@ -43,8 +43,8 @@ extern "C" {
 #endif // __cplusplus
 
 // ============================================================================
-// Extended Element: Pushbtn
-// - Pushbtn with custom handler for touch which
+// Extended Element: XTabBtn
+// - tab button with custom handler for touch which
 //   sets glow once a button pressed on and remains glowing
 //   until the button is pressed again thus the toggle effect.
 //   Just like radio buttons toggle buttons can be grouped
@@ -70,10 +70,10 @@ typedef struct {
 
 
 ///
-/// Redefine a TabBtn Element from a Text Button Element
+/// Redefine a Text Button as a XTabBtn Element
 ///
 /// \param[in]  pGui:        Pointer to GUI
-/// \param[in]  pElemRef:    Pointer to a BOX element reference with click and draw callbacks
+/// \param[in]  pElemRef:    Pointer to a Text Button element
 /// \param[in]  nPage:       Page ID where this element is attached
 /// \param[in]  nJumpPage:   Jump to this Page ID when selected
 /// \param[in]  bState:      Starting state true=selected, false=not selected
