@@ -450,8 +450,6 @@ bool gslc_ElemXProgressDrawHelpNew(gslc_tsGui* pGui,gslc_tsElemRef* pElemRef,
   
   pSpr->deleteSprite(); // Recover memory
   
-#endif
-
   // Draw a frame around the gauge
   // - Only draw this during full redraw
   if (eRedraw == GSLC_REDRAW_FULL && (pElem->nFeatures & GSLC_ELEM_FEA_FRAME_EN)) {
@@ -461,6 +459,7 @@ bool gslc_ElemXProgressDrawHelpNew(gslc_tsGui* pGui,gslc_tsElemRef* pElemRef,
       gslc_DrawFrameRect(pGui, rElem, pElem->colElemFrame);
     }
   }
+#endif
 
   return true;
 }
