@@ -83,7 +83,9 @@ typedef struct {
   bool                bFlip;          ///< Reverse direction of gauge
 
 #if defined(DRV_DISP_TFT_ESPI)
-  void* pvSpr;
+  void* pvSpr;                        ///< hold reference to our sprite
+#else
+  void* pvTft;                        ///< hold reference to our graphics driver
 #endif
 
 } gslc_tsXProgress;

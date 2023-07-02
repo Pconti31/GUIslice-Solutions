@@ -42,9 +42,11 @@
 
 #include "elem/XProgress.h"
 
-#if defined(DRV_DISP_TFT_ESPI)
 #include <SPI.h>
+#if defined(DRV_DISP_TFT_ESPI)
 #include <TFT_eSPI.h>       // Hardware-specific library
+#else
+#include <Adafruit_GFX.h>
 #endif
 
 #include <stdio.h>
@@ -131,6 +133,9 @@ gslc_tsElemRef* gslc_ElemXProgressCreate(gslc_tsGui* pGui,int16_t nElemId,int16_
     pXData->pvSpr = (void*)pSpr;
     // Set the sprite colour depth to 16
     pSpr->setColorDepth(16);
+#else
+    Adafruit_GFX* pTft = (Adafruit_GFX*)gslc_GetDriverDisp(pGui);
+    pXData->pvTft = (void*)pTft;
 #endif
   
   sElem.pXData            = (void*)(pXData);
@@ -288,7 +293,11 @@ bool gslc_ElemXProgressDraw(void* pvGui,void* pvElemRef,gslc_teRedrawType eRedra
     gslc_ElemXProgressDrawHelpOld(pGui,pElemRef,pGauge,eRedraw);
   }
 #else
+  if (pGauge->nFontId >= 0) {
+    gslc_ElemXProgressDrawHelpNew(pGui,pElemRef,pGauge,eRedraw);
+  } else {
     gslc_ElemXProgressDrawHelpOld(pGui,pElemRef,pGauge,eRedraw);
+  }
 #endif
   // Save as "last state" to support incremental erase/redraw
   pGauge->nValLast      = pGauge->nVal;
@@ -303,7 +312,6 @@ bool gslc_ElemXProgressDraw(void* pvGui,void* pvElemRef,gslc_teRedrawType eRedra
 bool gslc_ElemXProgressDrawHelpNew(gslc_tsGui* pGui,gslc_tsElemRef* pElemRef,
   gslc_tsXProgress* pGauge,gslc_teRedrawType eRedraw)
 {
-#if defined(DRV_DISP_TFT_ESPI)
   gslc_tsElem*  pElem   = gslc_GetElemFromRef(pGui,pElemRef);
 
   gslc_tsRect   rGauge;              // Filled portion of gauge
@@ -407,6 +415,7 @@ bool gslc_ElemXProgressDrawHelpNew(gslc_tsGui* pGui,gslc_tsElemRef* pElemRef,
 //  GSLC_DEBUG_PRINT("Gauge: x=%d y=%d w=%d h=%d\n",nGaugeX0,nGaugeY0,nGaugeW,nGaugeH);
 //  GSLC_DEBUG_PRINT("rText x=%d y=%d w=%d h=%d\n",rText.x,rText.y,rText.w,rText.h);
   
+#if defined(DRV_DISP_TFT_ESPI)
   // access our sprite
   TFT_eSprite* pSpr = (TFT_eSprite*)pGauge->pvSpr;
 
@@ -443,14 +452,55 @@ bool gslc_ElemXProgressDrawHelpNew(gslc_tsGui* pGui,gslc_tsElemRef* pElemRef,
   //pSpr->setTextDatum(MC_DATUM);
   // write percent to our sprite
   pSpr->print(acPercent);
+
   // flush our sprite to the display
   pSpr->pushSprite(rInner.x, rInner.y);
 
   pSpr->unloadFont(); // Remove the font to recover memory used
   
   pSpr->deleteSprite(); // Recover memory
+
+#else
+  Adafruit_GFX* pTft = (Adafruit_GFX*)pGauge->pvTft;
+ 
+  GFXcanvas16 *canvas = new GFXcanvas16 (rInner.w, rInner.h);
+  canvas->fillRect (0, 0, rInner.w, rInner.h, colorToRaw(pElem->colElemFill));
+
+  // Draw the gauge fill region
+  if (nPercent > 0) {
+    if (pElem->nFeatures & GSLC_ELEM_FEA_ROUND_EN) {
+      canvas->fillRoundRect(nGaugeX0,nGaugeY0,nGaugeW,nGaugeH,
+        (int32_t)pGui->nRoundRadius,colorToRaw(pGauge->colGauge));
+    } else {
+      canvas->fillRect(nGaugeX0,nGaugeY0,nGaugeW,nGaugeH,colorToRaw(pGauge->colGauge));
+    }
+  }
+
+  // Draw our Text - Best to use mono font
+  gslc_tsFont* pFont =  gslc_FontGet(pGui,pGauge->nFontId);
+  if (pFont == NULL) {
+    canvas->setTextSize(pFont->nSize);
+  } else {
+    canvas->setFont((const GFXfont *)pFont->pvFont);
+  }
   
-#endif
+  // Set the font colour and the background colour
+  canvas->setTextColor(colorToRaw(pElem->colElemText), colorToRaw(pGauge->colGauge));
+  char acPercent[6];
+  sprintf(acPercent,"%d%s",nPercent,"%");
+  canvas->setCursor(rText.x,rText.y);
+//  GSLC_DEBUG_PRINT("setCursor acPercent=%s x=%d y=%d\n",acPercent,rText.x,rText.y);
+
+  // write percent to our sprite
+  canvas->print(acPercent);
+
+  // flush our canvas to the display
+  pTft->drawRGBBitmap (rInner.x, rInner.y, canvas -> getBuffer (), rInner.w, rInner.h);
+
+  delete canvas; // Recover memory
+
+ #endif
+
 
   // Draw a frame around the gauge
   // - Only draw this during full redraw

@@ -1,6 +1,6 @@
 //<App !Start!>
 // FILE: [progress-percent.ino]
-// Created by GUIslice Builder version: [0.17.b18]
+// Created by GUIslice Builder version: [0.17.b24]
 //
 // GUIslice Builder Generated File
 //
