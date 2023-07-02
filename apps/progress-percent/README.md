@@ -10,8 +10,8 @@ the percent completed inside the progress bar.
 
 <p>
 This was originally a simple demonstration of how to use TFT_eSPI's sprite
-animation with GUIslice. It's a drop in replacement for the existing
-XProgress.<c,h> object. 
+animation with GUIslice. It now also supports Adafruit_GFX using canvas object for sprites.
+It's a drop in replacement for the existing XProgress.<c,h> object. 
 </p>
 
 It adds one new API call to set the font:
@@ -31,7 +31,7 @@ void gslc_ElemXProgressSetFont(gslc_tsGui* pGui,gslc_tsElemRef* pElemRef,int8_t 
 
 <p>
 The color of the text will default to white but you can optionally set the color 
-of text using GUIslice's:
+of text using GUIslice's gslc_ElemSetTxtCol() call:
 </p>
 
 ```
@@ -51,8 +51,7 @@ void gslc_ElemSetTxtCol(gslc_tsGui* pGui,gslc_tsElemRef* pElemRef,gslc_tsColor c
 This new version will ignore the min and max parameters when you supply a Font to
 the XProgress control. In this case only the values 0 to 100 will be recognized. 
 While if you do not supply a font the XProgess control will revert to its old 
-implementation. If you use it with any other graphics package other than TFT_eSPI 
-it will also ignore the new feature.
+implementation. 
 </p>
 
 <p>
@@ -61,8 +60,9 @@ and copy XProgress.cpp and XProgress.h inside the subfolder "elem" to your GUIsl
 </p>
 
 <p>
-The sample is set for Arduino using TFT_eSPI library and a standard
+The sample is set for Arduino using Adafruit_GFX library and a standard
 320x240 pixel display but you can use the GUIsliceBuilder to set the
-your display to another size. Simply use the PROJECT_OPTIONS tab inside 
-the builder.
+your display to another size or to use the TFT_eSPI library. 
+Simply open the use the progress-percent.prj file within the GUIsliceBuilder, select the 
+PROJECT_OPTIONS tab and make your changes before doing a new code generation.
 </p> 

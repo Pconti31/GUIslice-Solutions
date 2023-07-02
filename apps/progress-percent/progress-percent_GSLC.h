@@ -1,6 +1,6 @@
 //<File !Start!>
 // FILE: [progress-percent_GSLC.h]
-// Created by GUIslice Builder version: [0.17.b18]
+// Created by GUIslice Builder version: [0.17.b24]
 //
 // GUIslice Builder Generated GUI Framework File
 //
@@ -30,10 +30,10 @@
 // Note that font files are located within the Adafruit-GFX library folder:
 // ------------------------------------------------
 //<Fonts !Start!>
-#if !defined(DRV_DISP_TFT_ESPI)
-  #error E_PROJECT_OPTIONS tab->Graphics Library should be Adafruit_GFX
+#if defined(DRV_DISP_TFT_ESPI)
+  #error E_PROJECT_OPTIONS tab->Graphics Library should be TFT_eSPI
 #endif
-#include <TFT_eSPI.h>
+#include <Adafruit_GFX.h>
 #include "NotoMono8pt7b.h"
 //<Fonts !End!>
 
