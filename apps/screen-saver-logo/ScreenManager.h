@@ -30,7 +30,7 @@
 //
 // The MIT License
 //
-// Copyright (c) 2022 Paul Conti
+// Copyright (c) 2022-2023 Paul Conti
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -83,7 +83,8 @@ class ScreenManager {
                                 SCREENCB      countdowncb); 
                                 
     void update();              //update display
-    int getCountDown();         // return count down in seconds
+    int  getCountDown();        // return count down in seconds
+    void setTimeout(int timeout/*seconds*/);
     
   protected:
     void pause();                //call user supplied pause

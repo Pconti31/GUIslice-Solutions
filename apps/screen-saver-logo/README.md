@@ -18,6 +18,7 @@ The Bouncing Logo animation has a few configable parmeters that may be required
 depending upon the speed of your micro-controller and size of your logo.
 x_delta is the x distance to move your logo bitmap on each frame, y_delta is
 y distance. delete_ms is the number of milliseconds between frames, default is 5.
+You may call setTimeout() to dynamically change the timeout value after initialization. 
 </p>
 
 <p>
