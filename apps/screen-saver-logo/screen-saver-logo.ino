@@ -37,8 +37,10 @@ boolean        m_bBusyStatus = false; // this is just to show on/off text string
 // Save some element references for direct access
 //<Save_References !Start!>
 gslc_tsElemRef* m_pElemCBCheckBox = NULL;
+gslc_tsElemRef* m_pTimeout        = NULL;
 gslc_tsElemRef* m_pTxtCountDown   = NULL;
 gslc_tsElemRef* m_pTxtStatus      = NULL;
+gslc_tsElemRef* m_pElemKeyPadNum  = NULL;
 //<Save_References !End!>
 
 // Define debug message function
@@ -65,7 +67,7 @@ void my_counter() {
   int count = screenMgr.getCountDown();
   snprintf(m_acTxt,MAX_STR,"%02d",count);
   gslc_ElemSetTxtStr(&m_gui,m_pTxtCountDown,m_acTxt);
-  Serial.print("*** Timer! "); Serial.println(m_acTxt);
+//  Serial.print("*** Timer! "); Serial.println(m_acTxt);
 }
 
 // ------------------------------------------------
@@ -89,6 +91,10 @@ bool CbBtnCommon(void* pvGui,void *pvElemRef,gslc_teTouch eTouch,int16_t nX,int1
           gslc_ElemSetTxtStr(&m_gui,m_pTxtStatus,"ON");
         else
           gslc_ElemSetTxtStr(&m_gui,m_pTxtStatus,"OFF");
+        break;
+      case E_NUMINPUT_TIMEOUT:
+        // Clicked on edit field, so show popup box and associate with this text field
+        gslc_ElemXKeyPadInputAsk(&m_gui, m_pElemKeyPadNum, E_POP_KEYPAD_NUM, m_pTimeout);
         break;
 //<Button Enums !End!>
       default:
@@ -123,8 +129,41 @@ bool CbCheckbox(void* pvGui, void* pvElemRef, int16_t nSelId, bool bState)
   } // switch
   return true;
 }
-//<Keypad Callback !Start!>
-//<Keypad Callback !End!>
+// KeyPad Input Ready callback
+bool CbKeypad(void* pvGui, void *pvElemRef, int16_t nState, void* pvData)
+{
+  gslc_tsGui*     pGui     = (gslc_tsGui*)pvGui;
+  gslc_tsElemRef* pElemRef = (gslc_tsElemRef*)(pvElemRef);
+  gslc_tsElem*    pElem    = gslc_GetElemFromRef(pGui,pElemRef);
+  int32_t         nTimeout;
+  
+  // From the pvData we can get the ID element that is ready.
+  int16_t nTargetElemId = gslc_ElemXKeyPadDataTargetIdGet(pGui, pvData);
+  if (nState == XKEYPAD_CB_STATE_DONE) {
+    // User clicked on Enter to leave popup
+    // - If we have a popup active, pass the return value directly to
+    //   the corresponding value field
+    switch (nTargetElemId) {
+//<Keypad Enums !Start!>
+      case E_NUMINPUT_TIMEOUT:
+        gslc_ElemXKeyPadInputGet(pGui, m_pTimeout, pvData);
+        // convert string to int fot timeout
+        nTimeout = atol(gslc_ElemGetTxtStr(&m_gui, m_pTimeout));
+        // reset the default timeout value for the screen manager
+        screenMgr.setTimeout(nTimeout);
+        gslc_PopupHide(&m_gui);
+        break;
+
+//<Keypad Enums !End!>
+      default:
+        break;
+    }
+  } else if (nState == XKEYPAD_CB_STATE_CANCEL) {
+    // User escaped from popup, so don't update values
+    gslc_PopupHide(&m_gui);
+  }
+  return true;
+}
 //<Spinner Callback !Start!>
 //<Spinner Callback !End!>
 //<Listbox Callback !Start!>

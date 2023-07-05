@@ -145,3 +145,8 @@ int ScreenManager::getCountDown() {
   int count= (int)((m_nInactivityMax/1000)-m_nInactivityCount);
   return count;
 }
+
+void ScreenManager::setTimeout(int timeout/*seconds*/) {
+  m_nInactivityMax = timeout * 1000;
+  m_nInactivityCount = 0;
+}
