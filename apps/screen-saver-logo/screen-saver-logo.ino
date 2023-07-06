@@ -86,15 +86,41 @@ bool CbBtnCommon(void* pvGui,void *pvElemRef,gslc_teTouch eTouch,int16_t nX,int1
     switch (pElem->nId) {
 //<Button Enums !Start!>
       case E_ELEM_BTN_BUSY:
-        m_bBusyStatus ^= m_bBusyStatus;
-        if (m_bBusyStatus)
-          gslc_ElemSetTxtStr(&m_gui,m_pTxtStatus,"ON");
-        else
-          gslc_ElemSetTxtStr(&m_gui,m_pTxtStatus,"OFF");
+        gslc_SetPageCur(&m_gui, E_PG2);
         break;
       case E_NUMINPUT_TIMEOUT:
         // Clicked on edit field, so show popup box and associate with this text field
         gslc_ElemXKeyPadInputAsk(&m_gui, m_pElemKeyPadNum, E_POP_KEYPAD_NUM, m_pTimeout);
+        break;
+      case E_BTN_1:
+        Serial.println("BTN 1");
+        gslc_SetPageCur(&m_gui, E_PG_MAIN);
+        break;
+      case E_BTN_2:
+        Serial.println("BTN 2");
+        gslc_SetPageCur(&m_gui, E_PG_MAIN);
+        break;
+      case E_BTN_3:
+        Serial.println("BTN 3");
+        gslc_SetPageCur(&m_gui, E_PG_MAIN);
+        break;
+      case E_BTN_4:
+        Serial.println("BTN 4");
+        break;
+      case E_BTN_5:
+        Serial.println("BTN 5");
+        break;
+      case E_BTN_6:
+        Serial.println("BTN 6");
+        break;
+      case E_BTN_7:
+        Serial.println("BTN 7");
+        break;
+      case E_BTN_8:
+        Serial.println("BTN 8");
+        break;
+      case E_BTN_9:
+        Serial.println("BTN 9");
         break;
 //<Button Enums !End!>
       default:
