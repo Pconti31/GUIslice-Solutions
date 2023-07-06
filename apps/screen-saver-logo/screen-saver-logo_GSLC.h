@@ -48,8 +48,9 @@
 // Enumerations for pages, elements, fonts, images
 // ------------------------------------------------
 //<Enum !Start!>
-enum {E_PG_BASE,E_PG_MAIN,E_POP_KEYPAD_NUM};
-enum {E_ELEM_BTN_BUSY,E_ELEM_CHECK1,E_ELEM_TEXT1,E_ELEM_TEXT10
+enum {E_PG_BASE,E_PG_MAIN,E_PG2,E_POP_KEYPAD_NUM};
+enum {E_BTN_1,E_BTN_2,E_BTN_3,E_BTN_4,E_BTN_5,E_BTN_6,E_BTN_7,E_BTN_8
+      ,E_BTN_9,E_ELEM_BTN_BUSY,E_ELEM_CHECK1,E_ELEM_TEXT1,E_ELEM_TEXT10
       ,E_ELEM_TEXT2,E_ELEM_TEXT4,E_ELEM_TEXT5,E_ELEM_TEXT8
       ,E_ELEM_TEXT_STATUS,E_NUMINPUT_TIMEOUT,E_TXT_COUNTDOWN
       ,E_ELEM_KEYPAD_NUM};
@@ -65,13 +66,16 @@ enum {E_BUILTIN10X16,E_BUILTIN5X8,MAX_FONT};
 // Define the maximum number of elements and pages
 // ------------------------------------------------
 //<ElementDefines !Start!>
-#define MAX_PAGE                3
+#define MAX_PAGE                4
 
 #define MAX_ELEM_PG_BASE 3 // # Elems total on page
 #define MAX_ELEM_PG_BASE_RAM MAX_ELEM_PG_BASE // # Elems in RAM
 
 #define MAX_ELEM_PG_MAIN 8 // # Elems total on page
 #define MAX_ELEM_PG_MAIN_RAM MAX_ELEM_PG_MAIN // # Elems in RAM
+
+#define MAX_ELEM_PG2 9 // # Elems total on page
+#define MAX_ELEM_PG2_RAM MAX_ELEM_PG2 // # Elems in RAM
 //<ElementDefines !End!>
 
 // ------------------------------------------------
@@ -87,6 +91,8 @@ gslc_tsElem                     m_asBasePage1Elem[MAX_ELEM_PG_BASE_RAM];
 gslc_tsElemRef                  m_asBasePage1ElemRef[MAX_ELEM_PG_BASE];
 gslc_tsElem                     m_asPage1Elem[MAX_ELEM_PG_MAIN_RAM];
 gslc_tsElemRef                  m_asPage1ElemRef[MAX_ELEM_PG_MAIN];
+gslc_tsElem                     m_asPage2Elem[MAX_ELEM_PG2_RAM];
+gslc_tsElemRef                  m_asPage2ElemRef[MAX_ELEM_PG2];
 gslc_tsElem                     m_asKeypadNumElem[1];
 gslc_tsElemRef                  m_asKeypadNumElemRef[1];
 gslc_tsXKeyPad                  m_sKeyPadNum;
@@ -144,6 +150,7 @@ void InitGUIslice_gen()
 //<InitGUI !Start!>
   gslc_PageAdd(&m_gui,E_PG_BASE,m_asBasePage1Elem,MAX_ELEM_PG_BASE_RAM,m_asBasePage1ElemRef,MAX_ELEM_PG_BASE);
   gslc_PageAdd(&m_gui,E_PG_MAIN,m_asPage1Elem,MAX_ELEM_PG_MAIN_RAM,m_asPage1ElemRef,MAX_ELEM_PG_MAIN);
+  gslc_PageAdd(&m_gui,E_PG2,m_asPage2Elem,MAX_ELEM_PG2_RAM,m_asPage2ElemRef,MAX_ELEM_PG2);
   gslc_PageAdd(&m_gui,E_POP_KEYPAD_NUM,m_asKeypadNumElem,1,m_asKeypadNumElemRef,1);  // KeyPad
 
   // Now mark E_PG_BASE as a "base" page which means that it's elements
@@ -190,7 +197,7 @@ void InitGUIslice_gen()
   
   // create E_ELEM_BTN_BUSY button with text label
   pElemRef = gslc_ElemCreateBtnTxt(&m_gui,E_ELEM_BTN_BUSY,E_PG_MAIN,
-    (gslc_tsRect){10,160,80,40},(char*)"Keep Busy",0,E_BUILTIN5X8,&CbBtnCommon);
+    (gslc_tsRect){10,160,80,40},(char*)"Next Page",0,E_BUILTIN5X8,&CbBtnCommon);
   
   // Create E_ELEM_TEXT2 text label
   pElemRef = gslc_ElemCreateTxt(&m_gui,E_ELEM_TEXT2,E_PG_MAIN,(gslc_tsRect){20,55,144,8},
@@ -229,6 +236,46 @@ void InitGUIslice_gen()
   gslc_ElemSetClickEn(&m_gui, pElemRef, true);
   gslc_ElemSetTouchFunc(&m_gui, pElemRef, &CbBtnCommon);
   m_pTimeout = pElemRef;
+
+  // -----------------------------------
+  // PAGE: E_PG2
+  
+  
+  // create E_BTN_1 button with text label
+  pElemRef = gslc_ElemCreateBtnTxt(&m_gui,E_BTN_1,E_PG2,
+    (gslc_tsRect){20,30,80,40},(char*)"BTN 1",0,E_BUILTIN5X8,&CbBtnCommon);
+  
+  // create E_BTN_2 button with text label
+  pElemRef = gslc_ElemCreateBtnTxt(&m_gui,E_BTN_2,E_PG2,
+    (gslc_tsRect){120,30,80,40},(char*)"BTN 2",0,E_BUILTIN5X8,&CbBtnCommon);
+  
+  // create E_BTN_3 button with text label
+  pElemRef = gslc_ElemCreateBtnTxt(&m_gui,E_BTN_3,E_PG2,
+    (gslc_tsRect){220,30,80,40},(char*)"BTN 3",0,E_BUILTIN5X8,&CbBtnCommon);
+  
+  // create E_BTN_4 button with text label
+  pElemRef = gslc_ElemCreateBtnTxt(&m_gui,E_BTN_4,E_PG2,
+    (gslc_tsRect){20,90,80,40},(char*)"BTN 4",0,E_BUILTIN5X8,&CbBtnCommon);
+  
+  // create E_BTN_5 button with text label
+  pElemRef = gslc_ElemCreateBtnTxt(&m_gui,E_BTN_5,E_PG2,
+    (gslc_tsRect){120,90,80,40},(char*)"BTN 5",0,E_BUILTIN5X8,&CbBtnCommon);
+  
+  // create E_BTN_6 button with text label
+  pElemRef = gslc_ElemCreateBtnTxt(&m_gui,E_BTN_6,E_PG2,
+    (gslc_tsRect){220,90,80,40},(char*)"BTN 6",0,E_BUILTIN5X8,&CbBtnCommon);
+  
+  // create E_BTN_7 button with text label
+  pElemRef = gslc_ElemCreateBtnTxt(&m_gui,E_BTN_7,E_PG2,
+    (gslc_tsRect){20,150,80,40},(char*)"BTN 7",0,E_BUILTIN5X8,&CbBtnCommon);
+  
+  // create E_BTN_8 button with text label
+  pElemRef = gslc_ElemCreateBtnTxt(&m_gui,E_BTN_8,E_PG2,
+    (gslc_tsRect){120,150,80,40},(char*)"BTN 8",0,E_BUILTIN5X8,&CbBtnCommon);
+  
+  // create E_BTN_9 button with text label
+  pElemRef = gslc_ElemCreateBtnTxt(&m_gui,E_BTN_9,E_PG2,
+    (gslc_tsRect){220,150,80,40},(char*)"BTN 9",0,E_BUILTIN5X8,&CbBtnCommon);
 
   // -----------------------------------
   // PAGE: E_POP_KEYPAD_NUM
