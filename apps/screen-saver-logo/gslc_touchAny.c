@@ -2,7 +2,7 @@
 #include "gslc_touchAny.h"
 
 // uncomment to debug my touch events
-#define MY_TOUCH
+//#define MY_TOUCH
 
 bool my_TrackTouch(gslc_tsGui* pGui,int16_t nX,int16_t nY,uint16_t nPress)
 {
@@ -147,6 +147,7 @@ bool gslc_touchAny(gslc_tsGui* pGui)
       case GSLC_INPUT_TOUCH:
         // eat all touch events to avoid triggering hidden UI elements
         while(my_touch_loop(pGui)) { };
+        GSLC_DEBUG_PRINT("My Trk: EXIT ****\n","");
         return true;
       case GSLC_INPUT_NONE:
       default:

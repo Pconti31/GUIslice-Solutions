@@ -87,8 +87,10 @@ class ScreenManager {
     void setTimeout(int timeout/*seconds*/);
     
   protected:
-    void pause();                //call user supplied pause
-    void resume();               //call user supplied resume
+    void pause();                // call user supplied pause
+    void resume();               // call user supplied resume
+    void closePopup();           // if current page is a popup close it
+    
     SCREENCB m_fPausecb;         // routine to call when screen is paused
     SCREENCB m_fResumecb;        // routine to call when screen is resumed
     SCREENCB m_fDisplaycb;       // routine to call for display of screen

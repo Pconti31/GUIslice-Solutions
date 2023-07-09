@@ -62,9 +62,20 @@ void ScreenManager::update() {
       m_bIsActive = false;
       pause();
       // refresh current page 
-      gslc_tsRect rRect = { 0, 0, m_pGui->nDispW, m_pGui->nDispH};
-      gslc_DrawFillRect(m_pGui,rRect,GSLC_COL_BLACK);
-      gslc_InvalidateRgnPage(m_pGui,&m_asPage[gslc_GetPageCur(m_pGui)]);
+      gslc_DrvDrawBkgnd(m_pGui);
+      gslc_tsPage* curPage = &m_asPage[gslc_GetPageCur(m_pGui)];
+      gslc_SetPageCur(m_pGui, curPage->nPageId);
+      
+      gslc_InvalidateRgnPage(m_pGui, curPage);
+      gslc_tsCollect* pCollect = &curPage->sCollect;
+      gslc_tsElemRef*   pElemRef = NULL;
+      uint16_t          nInd;
+      for (nInd=0;nInd<pCollect->nElemRefCnt;nInd++) {
+        // Fetch the element pointer from the reference array
+        pElemRef = &(pCollect->asElemRef[nInd]);
+        gslc_ElemSetRedraw(m_pGui,pElemRef,GSLC_REDRAW_FULL);
+      }
+//      Serial.println("ScreenManager EXIT UPDATE");
       m_nStartTime = millis();
       /* If user supplied a countdown callback
        * notify user that touch occurred and our inactiviry countdown
@@ -89,9 +100,10 @@ void ScreenManager::update() {
       if ((currentTime-m_nStartTime) >= m_nInactivityMax) {
         // timer has expired so trigger screen saver code
         // but first blank screen
-        gslc_tsRect rRect = { 0, 0, m_pGui->nDispW, m_pGui->nDispH};
-        gslc_DrawFillRect(m_pGui,rRect,GSLC_COL_BLACK);
-        gslc_InvalidateRgnPage(m_pGui,&m_asPage[gslc_GetPageCur(m_pGui)]);
+        gslc_DrvDrawBkgnd(m_pGui);
+//        gslc_InvalidateRgnPage(m_pGui,&m_asPage[gslc_GetPageCur(m_pGui)]);
+        closePopup();  // active popup will screwup return from screen saver
+//        gslc_Update(m_pGui);
         // turn on our screen saver
         m_nInactivityCount = 0;
         m_bIsActive = true;
@@ -149,4 +161,12 @@ int ScreenManager::getCountDown() {
 void ScreenManager::setTimeout(int timeout/*seconds*/) {
   m_nInactivityMax = timeout * 1000;
   m_nInactivityCount = 0;
+}
+
+void ScreenManager::closePopup() {
+  gslc_tsPage* pPage = m_pGui->apPageStack[GSLC_STACK_OVERLAY];
+  if (pPage != NULL) {
+//    Serial.print("Closed Popup page: "); Serial.println(pPage->nPageId);
+    gslc_PopupHide(m_pGui);
+  }
 }
