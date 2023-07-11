@@ -7,6 +7,14 @@
 
 #include "BouncingLogoAnim.h"
 
+#if (GSLC_USE_PROGMEM)
+  #if defined(__AVR__)
+    #include <avr/pgmspace.h>
+  #else
+    #include <pgmspace.h>
+  #endif
+#endif
+
 BouncingLogoAnim::~BouncingLogoAnim() {
 }
 
@@ -35,7 +43,7 @@ void BouncingLogoAnim::init(gslc_tsGui* pGui, const unsigned short *logo) {
   tft->fillScreen(bgCol); // clear our screen
 }
 
-void BouncingLogoAnim::init(gslc_tsGui* pGui, const unsigned short *logo, uint16_t bg_color, int x_delta, int y_delta, int delay_ms) {
+void BouncingLogoAnim::init(gslc_tsGui* pGui, const unsigned short *logo, gslc_tsColor bg_color, int x_delta, int y_delta, int delay_ms) {
   pGui = pGui;
   config_xd = x_delta;
   config_yd = y_delta;
@@ -43,7 +51,7 @@ void BouncingLogoAnim::init(gslc_tsGui* pGui, const unsigned short *logo, uint16
   y = nMargin+1;
   oldx = -1;
   oldy = -1;
-  bgCol = bg_color;
+  bgCol = colorTo16Bit(bg_color);
   xd = config_xd;
   yd = config_yd;
   timeFrame = delay_ms;
@@ -51,8 +59,10 @@ void BouncingLogoAnim::init(gslc_tsGui* pGui, const unsigned short *logo, uint16
   screen_height = pGui->nDispH;
   sImgRef = gslc_GetImageFromProg((const unsigned char*)logo, GSLC_IMGREF_FMT_BMP24);
   pImage = (uint16_t*)sImgRef.pImgBuf;
+
   logo_ht = pgm_read_word(pImage++);
   logo_wd = pgm_read_word(pImage++);
+
   canvas_wd = logo_wd + (nMargin);
   canvas_ht = logo_ht + (nMargin);
   // find our display driver
@@ -95,6 +105,10 @@ void BouncingLogoAnim::loop(){
 // actual drawing takes place here
 void BouncingLogoAnim::drawLogo() {
   if (oldx > -1) {
+#if defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega328P__)
+    tft->fillRect(0, 0, screen_width, screen_height, bgCol);
+    tft->drawRGBBitmap (x, y, (const uint16_t[])pImage, logo_wd, logo_ht);
+#else 
     GFXcanvas16 *canvas = new GFXcanvas16 (canvas_wd, canvas_ht);
     canvas -> fillRect (0, 0, canvas_wd, canvas_ht, bgCol);
     int x1 = config_xd + (x - oldx);
@@ -102,6 +116,7 @@ void BouncingLogoAnim::drawLogo() {
     canvas->drawRGBBitmap(x1, y1, pImage, logo_wd, logo_ht);
     tft->drawRGBBitmap (x, y, canvas -> getBuffer (), canvas_wd, canvas_ht);
     delete canvas;
+#endif
   }
   oldx = x;
   oldy = y;
@@ -122,4 +137,12 @@ void BouncingLogoAnim::resume() {
   xd = config_xd;
   yd = config_yd;
   tft->fillScreen(bgCol);
+}
+
+uint16_t BouncingLogoAnim::colorTo16Bit(gslc_tsColor col888) {
+  uint16_t nCol = 0;
+  nCol  = (uint16_t)(col888.r  & 0b11111000) <<8;
+  nCol |= (uint16_t)(col888.g & 0b11111100 ) <<3;
+  nCol |= (uint16_t)(col888.b >> 3);
+  return nCol;
 }

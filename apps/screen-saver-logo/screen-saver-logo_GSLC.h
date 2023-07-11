@@ -51,9 +51,9 @@
 enum {E_PG_BASE,E_PG_MAIN,E_PG2,E_POP_KEYPAD_NUM};
 enum {E_BTN_1,E_BTN_2,E_BTN_3,E_BTN_4,E_BTN_5,E_BTN_6,E_BTN_7,E_BTN_8
       ,E_BTN_9,E_ELEM_BTN_BUSY,E_ELEM_CHECK1,E_ELEM_TEXT1,E_ELEM_TEXT10
-      ,E_ELEM_TEXT2,E_ELEM_TEXT4,E_ELEM_TEXT5,E_ELEM_TEXT8
-      ,E_ELEM_TEXT_STATUS,E_NUMINPUT_TIMEOUT,E_TXT_COUNTDOWN
-      ,E_ELEM_KEYPAD_NUM};
+      ,E_ELEM_TEXT12,E_ELEM_TEXT2,E_ELEM_TEXT4,E_ELEM_TEXT5
+      ,E_ELEM_TEXT8,E_ELEM_TEXT_STATUS,E_NUMINPUT_TIMEOUT
+      ,E_TXT_COUNTDOWN,E_ELEM_KEYPAD_NUM};
 // Must use separate enum for fonts with MAX_FONT at end to use gslc_FontSet.
 enum {E_BUILTIN10X16,E_BUILTIN5X8,MAX_FONT};
 //<Enum !End!>
@@ -74,7 +74,7 @@ enum {E_BUILTIN10X16,E_BUILTIN5X8,MAX_FONT};
 #define MAX_ELEM_PG_MAIN 8 // # Elems total on page
 #define MAX_ELEM_PG_MAIN_RAM MAX_ELEM_PG_MAIN // # Elems in RAM
 
-#define MAX_ELEM_PG2 9 // # Elems total on page
+#define MAX_ELEM_PG2 10 // # Elems total on page
 #define MAX_ELEM_PG2_RAM MAX_ELEM_PG2 // # Elems in RAM
 //<ElementDefines !End!>
 
@@ -276,6 +276,12 @@ void InitGUIslice_gen()
   // create E_BTN_9 button with text label
   pElemRef = gslc_ElemCreateBtnTxt(&m_gui,E_BTN_9,E_PG2,
     (gslc_tsRect){220,150,80,40},(char*)"BTN 9",0,E_BUILTIN5X8,&CbBtnCommon);
+  
+  // Create E_ELEM_TEXT12 text label
+  pElemRef = gslc_ElemCreateTxt(&m_gui,E_ELEM_TEXT12,E_PG2,(gslc_tsRect){0,12,320,8},
+    (char*)"Sample Page with lots of buttons",0,E_BUILTIN5X8);
+  gslc_ElemSetTxtAlign(&m_gui,pElemRef,GSLC_ALIGN_MID_MID);
+  gslc_ElemSetFillEn(&m_gui,pElemRef,false);
 
   // -----------------------------------
   // PAGE: E_POP_KEYPAD_NUM

@@ -60,7 +60,8 @@ void my_resume() {
 void my_display() {
   // myAnimation doesn't really loop
   // but just paints one frame then returns
-  myAnimation.loop();
+  if (screenMgr.isActive())
+    myAnimation.loop();
 }
 
 void my_counter() {
@@ -225,7 +226,7 @@ void setup()
 
   myAnimation.pause();
 
-  screenMgr.init(&m_gui, 10 /*timeout seconds*/, &my_pause, &my_resume, &my_display, &my_counter);
+  screenMgr.init(&m_gui, 10 /*timeout seconds*/, &my_pause, &my_resume, &my_display, &my_counter, GSLC_COL_BLACK);
   
 }
 

@@ -174,7 +174,7 @@ void setup()
   digitalRainAnim.init(tft);
   digitalRainAnim.pause();
 
-  screenMgr.init(&m_gui, 10 /*timeout seconds*/, &my_pause, &my_resume, &my_display, &my_counter);
+  screenMgr.init(&m_gui, 10 /*timeout seconds*/, &my_pause, &my_resume, &my_display, &my_counter, GSLC_COL_BLACK);
   
 }
 
