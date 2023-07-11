@@ -1,79 +1,21 @@
 
 #include "gslc_touchAny.h"
 
-// uncomment to debug my touch events
-//#define MY_TOUCH
-
-bool my_TrackTouch(gslc_tsGui* pGui,int16_t nX,int16_t nY,uint16_t nPress)
-{
-  // Determine the transitions in the touch events based
-  // on the previous touch pressure state
-  gslc_teTouch  eTouch = GSLC_TOUCH_NONE;
-  if ((pGui->nTouchLastPress == 0) && (nPress > 0)) {
-    eTouch = GSLC_TOUCH_DOWN;
-    #ifdef MY_TOUCH
-    GSLC_DEBUG_PRINT("My Trk: (%3d,%3d) P=%3u : TouchDown\n",nX,nY,nPress);
-    #endif
-    return true;
-  } else if ((pGui->nTouchLastPress > 0) && (nPress == 0)) {
-    eTouch = GSLC_TOUCH_UP;
-    #ifdef MY_TOUCH
-    GSLC_DEBUG_PRINT("My Trk: (%3d,%3d) P=%3u : TouchUp\n",nX,nY,nPress);
-    #endif
-    return true;
-  } else if ((pGui->nTouchLastX != nX) || (pGui->nTouchLastY != nY)) {
-    // We only track movement if touch is "down"
-    if (nPress > 0) {
-      eTouch = GSLC_TOUCH_MOVE;
-      #ifdef MY_TOUCH
-      GSLC_DEBUG_PRINT("My Trk: (%3d,%3d) P=%3u : TouchMove\n",nX,nY,nPress);
-      #endif
-      return true;
-    }
-  }
-
-  // Save raw touch status so that we can detect transitions
-  pGui->nTouchLastX      = nX;
-  pGui->nTouchLastY      = nY;
-  pGui->nTouchLastPress  = nPress;
-
-  #ifdef MY_TOUCH
-  GSLC_DEBUG_PRINT("My Trk: No More Touch Events\n","");
+#if (GSLC_USE_PROGMEM)
+  #if defined(__AVR__)
+    #include <avr/pgmspace.h>
+  #else
+    #include <pgmspace.h>
   #endif
-  return false;
-}
+#endif
 
-bool my_touch_loop(gslc_tsGui* pGui) {
-  uint16_t              nTouchPress = 0;
-  bool                  bEvent = false;
-  int16_t               nTouchX = 0;
-  int16_t               nTouchY = 0;
-  gslc_teInputRawEvent  eInputEvent = GSLC_INPUT_NONE;
-  int16_t               nInputVal = 0;
+// ----------------------------------------------------------------------------
+// Error Messages
+// ----------------------------------------------------------------------------
 
-  // Fetch input event, which could include touch / mouse / keyboard / pin
-  bEvent = gslc_GetTouch(pGui, &nTouchX, &nTouchY, &nTouchPress, &eInputEvent, &nInputVal);
-  if (bEvent) {
-    // Track and handle the input events
-    // - Handle the events on the current page
-    switch (eInputEvent) {
-      case GSLC_INPUT_KEY_DOWN:
-      case GSLC_INPUT_PIN_ASSERT:
-      case GSLC_INPUT_KEY_UP:
-      case GSLC_INPUT_PIN_DEASSERT:
-        break;
-      case GSLC_INPUT_TOUCH:
-        // Track touch event
-        return my_TrackTouch(pGui,nTouchX,nTouchY,nTouchPress);
-      case GSLC_INPUT_NONE:
-      default:
-        break;
-    }
-  }
-  return false;
-}
+extern const char GSLC_PMEM ERRSTR_NULL[];
+extern const char GSLC_PMEM ERRSTR_PXD_NULL[];// Polling loop for GUIslice events
 
-// Polling loop for GUIslice events
 // does not affect event queue and does not replace calling gslc_update() 
 bool gslc_touchAny(gslc_tsGui* pGui)
 {
@@ -125,9 +67,8 @@ bool gslc_touchAny(gslc_tsGui* pGui)
   bEvent = gslc_GetTouch(pGui, &nTouchX, &nTouchY, &nTouchPress, &eInputEvent, &nInputVal);
 
   // --------------------------------------------------------------
-  // If event found, we need to loop until 
+  // If event found, return true
   // --------------------------------------------------------------
-  uint16_t nReturn = 0;
   if (bEvent) {
 
     // Track and handle the input events
@@ -145,9 +86,8 @@ bool gslc_touchAny(gslc_tsGui* pGui)
       case GSLC_INPUT_PIN_DEASSERT:
         return true;
       case GSLC_INPUT_TOUCH:
-        // eat all touch events to avoid triggering hidden UI elements
-        while(my_touch_loop(pGui)) { };
-        GSLC_DEBUG_PRINT("My Trk: EXIT ****\n","");
+        // Track touch event
+        gslc_TrackTouch(pGui,NULL,nTouchX,nTouchY,nTouchPress);
         return true;
       case GSLC_INPUT_NONE:
       default:
@@ -159,3 +99,4 @@ bool gslc_touchAny(gslc_tsGui* pGui)
   #endif // !DRV_TOUCH_NONE
   return false;
 }
+

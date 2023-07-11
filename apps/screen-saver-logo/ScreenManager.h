@@ -63,28 +63,33 @@
 /// Callback function for ScreenManager
 typedef void (*SCREENCB)();
 
+void gslc_createInvisiblePG(gslc_tsGui* pGui);
+
 class ScreenManager {
   public:
     ScreenManager() {};
     virtual ~ScreenManager() {};   
     void init(gslc_tsGui* pGui, int timeout/*seconds*/, 
                                 SCREENCB      pausecb,
-                                SCREENCB      resumecb);
-                                
-    void init(gslc_tsGui* pGui, int timeout/*seconds*/, 
-                                SCREENCB      pausecb,
-                                SCREENCB      resumecb,
-                                SCREENCB      displaycb);
-
-    void init(gslc_tsGui* pGui, int timeout/*seconds*/, 
-                                SCREENCB      pausecb,
                                 SCREENCB      resumecb,
                                 SCREENCB      displaycb,
-                                SCREENCB      countdowncb); 
+                                SCREENCB      countdowncb,
+                                gslc_tsColor  bgCol); 
                                 
-    void update();              //update display
+    void update();              // update display
+    void disable();             // disable screen manager timeouts
+    void enable();              // enable screen manager after a disable call
+    
+    bool isActive() { return m_bIsActive; };
+    bool isDisabled() { return m_bIsDisabled; };
+
     int  getCountDown();        // return count down in seconds
-    void setTimeout(int timeout/*seconds*/);
+    void setTimeout(int timeout/*seconds*/); // change current time out value
+    
+    // The following would be better private but needs to be from C so...
+    void stop();                // stop screen saver
+    void display();             // called by our hidden callback to display screen saver
+    gslc_tsColor getBgColor() { return m_bgCol; }; // get background color 
     
   protected:
     void pause();                // call user supplied pause
@@ -97,10 +102,13 @@ class ScreenManager {
     SCREENCB m_fCountdowncb;// routine to call each second during inactivity 
 
     gslc_tsGui* m_pGui;           // pointer to all of GUIslice's state and content
+    gslc_tsPage* m_curPage;       // page to restore
     bool     m_bIsActive;         // boolean for screen saver on/off
+    bool     m_bIsDisabled;       // boolean indicates screen manager disabled
     uint32_t m_nStartTime;        // timer start time in millseconds
     uint32_t m_nInactivityMax;    // maximum time to have no activity in milliseconds
     uint32_t m_nInactivityCount;  // current inactivity time in seconds
+    gslc_tsColor m_bgCol;         // background color
 };
 
 #endif // _SCREENMANAGER_H

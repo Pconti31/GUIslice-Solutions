@@ -17,13 +17,14 @@ class BouncingLogoAnim {
     BouncingLogoAnim()  {};
     virtual ~BouncingLogoAnim();   
     void init(gslc_tsGui* pGui, const unsigned short *logo);
-    void init(gslc_tsGui* pGui, const unsigned short *logo, uint16_t bg_color, int x_delta, int y_delta, int delay_ms);
+    void init(gslc_tsGui* pGui, const unsigned short *logo, gslc_tsColor bg_color, int x_delta, int y_delta, int delay_ms);
     void loop();                         //loop animation
     void pause();                        //pause animation 
     void resume();                       //resume animation
      
   private:
     void drawLogo();
+    uint16_t colorTo16Bit(gslc_tsColor col888);
     
     const int nMargin = 10;
     

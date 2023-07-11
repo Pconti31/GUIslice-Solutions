@@ -55,7 +55,6 @@ extern "C" {
 ///
 bool gslc_touchAny(gslc_tsGui* pGui);
 
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus
