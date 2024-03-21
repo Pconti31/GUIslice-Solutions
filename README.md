@@ -23,3 +23,23 @@ and GUIslice Builder. This has made them somewhat hard to find and often needed 
 So I have gathered them here in one place to make them more accessible.
 </p>
 
+## List of Example Applications
+
+Name | Demonstrates
+-----|------
+ContinuePress-Btn | Continueus Press of a Button
+drag-popup | Make a popup window draggable by a user
+ex_boot_screen | splash screen at startup waiting for any initialization
+ex_splash_screen | Another splash screen at startup but waits N seconds
+flashing-text | Demonstration of Flashing Text
+led-panel | How to use a Box with a Draw Callback to implementa panel of LEDs
+Longpress-Btn | How to make a Button run a motor only while being pressed
+no-flicker-graph | How to display your graphs without any major flicker
+ntp-test | Base page to create a status line and also use NTP Time Service
+popup_input | How to use popup with input and validate data
+progress-percent | Progress Bar with embedded percent completed and no flicker
+runtime_calibration | Tune touch calibrations and read/store either SD Card or EEPROM
+screen-saver | Screen saver that appears after N seconds of no activity
+screen-saver-logo | Screen saver displaying animation Bitmap like a company logo
+simple_tabs | Custom Extended Element XTabBtn control to simplify tab handling
+
