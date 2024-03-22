@@ -163,7 +163,7 @@ void setup()
   // Initialize our calibration object
   // ------------------------------------------------
 #if defined(USE_SD_INTERFACE)
-  calibration.init(&m_gui, E_PG_POPUP1. "mydata.bin");
+  calibration.init(&m_gui, E_PG_POPUP1, (char *) "mydata.bin");
 #else
   // store calibration data at beginning of our EEPROM. 
   calibration.init(&m_gui, E_PG_POPUP1, 0);
