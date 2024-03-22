@@ -150,7 +150,7 @@
 //   - DEBUG_CALIB 0 = Disable all messaging to serial monitor
 //   - DEBUG_CALIB 1 = Enable summary messaging
 //   - DEBUG_CALIB 2 = Enable detailed tracing for debugging
-#define DEBUG_CALIB 1
+#define DEBUG_CALIB  1
 
 #define CALIB_DEBUG_PRINT(sFmt, ...)                    \
           do {                                                  \

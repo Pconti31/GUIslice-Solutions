@@ -147,17 +147,18 @@ void TFT_Calibration::run() {
     m_bRemapYX = false;
   #endif
 
-  // Rotate the display to ROTATE=0 native orientation
-  gslc_GuiRotate(m_pGui, 0);
-
   // ---------------------------------------------------------
   // set new current page to our non-functional popup page
   gslc_PopupShow(m_pGui, m_popupPage, true);
   
-//  gslc_Update(m_pGui); 
+  // Rotate the display to ROTATE=0 native orientation
+  // can't use gslc_GuiRotate(m_pGui, 0) since it causes
+  // a screen refresh
+  gslc_DrvRotate(m_pGui,0);
 
   m_bStartTimer = true;
   m_bIsActive = true;
+  loop();
 }
 
 void TFT_Calibration::restore() {
@@ -311,7 +312,6 @@ void TFT_Calibration::doFsm(bool bTouchDown, bool bTouchUp, int16_t nTouchX, int
   case STATE_CAL_START_MSG:
     if (m_bStateBegin) {
       drawBackground();
-      gslc_Update(m_pGui); 
 
       CALIB_DEBUG2_PRINT("doFsm: m_bStateBegin\n","");
       resetDatapoints();
