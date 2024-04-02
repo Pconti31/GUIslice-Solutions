@@ -27,6 +27,7 @@ So I have gathered them here in one place to make them more accessible.
 
 Name | Demonstrates
 -----|------
+busywait | Animation that indicates task will run indeterminate length of time
 ContinuePress-Btn | Continueus Press of a Button
 drag-popup | Make a popup window draggable by a user
 ex_boot_screen | splash screen at startup waiting for any initialization
@@ -42,4 +43,3 @@ runtime_calibration | Tune touch calibrations and read/store either SD Card or E
 screen-saver | Screen saver that appears after N seconds of no activity
 screen-saver-logo | Screen saver displaying animation Bitmap like a company logo
 simple_tabs | Custom Extended Element XTabBtn control to simplify tab handling
-
