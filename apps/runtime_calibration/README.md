@@ -3,8 +3,11 @@
 <p>
 Example of Application that can make use of touch screen
 calibrations for XMIN, XMAX, YMIN, YMAX values stored
-either on SD Card or in EEPROM thus overriding values stored in
+either on SD Card, EEPROM or Flash thus overriding values stored in
 compiled code taken from GUIslice/config/*.h files.
+Flash Storage requires the library:
+https://github.com/cmaglie/FlashStorage and has been tested with
+ARM Cortex M0+ based board 
 </p>
 
 <p>
@@ -38,9 +41,35 @@ select the PROJECT_OPTIONS tab and make your changes before doing asave and
 new code generation. 
 </p> 
 
-## NOTE:
+## NOTES:
 <p>
 Don't forget to read the NOTES and WARNINGs sections inside "TFT_Calibration.h"
 for TFT_Calibration class usage.
 </p>
+
+<p>
+One thing that may not be obvious is how to use this new class with my 
+screen saver class since they both require calling their own update 
+function. The answer is to ignore the Calibration update() function and 
+and instead do this... 
+</p>
+
+
+```
+loop() {
+ .
+ .
+ .
+  
+  if (calibration.isActive()) {
+    loop();
+  } else {
+    // Our ScreenMgr calls gslc_Update when required
+    // DO NOT call it directly or your screen will get messed up!
+    //gslc_Update(&m_gui);
+    screenMgr.update();
+  }
+
+```
+    
 

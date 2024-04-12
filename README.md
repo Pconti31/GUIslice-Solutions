@@ -39,7 +39,7 @@ no-flicker-graph | How to display your graphs without any major flicker
 ntp-test | Base page to create a status line and also use NTP Time Service
 popup_input | How to use popup with input and validate data
 progress-percent | Progress Bar with embedded percent completed and no flicker
-runtime_calibration | Tune touch calibrations and read/store either SD Card or EEPROM
+runtime_calibration | Tune touch calibrations and read/store either SD Card, EEPROM, or flash
 screen-saver | Screen saver that appears after N seconds of no activity
 screen-saver-logo | Screen saver displaying animation Bitmap like a company logo
 simple_tabs | Custom Extended Element XTabBtn control to simplify tab handling

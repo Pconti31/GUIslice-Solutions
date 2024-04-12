@@ -11,8 +11,8 @@
 //
 // TFT_Calibration.init() will determine if calibration
 // values are presently stored either on the mounted SD card,
-// or in EEPROM depending upon which #define 
-// USE_SD_INTERFACE or USE_EEPROM_INTERFACE is selected.
+// EEPROM or Flashdepending upon which #define 
+// USE_SD_INTERFACE, USE_EEPROM_INTERFACE, USE_FLASH_INTERFACE is selected.
 // 
 // During init() phase it will read in the calibration values and call 
 // GUIslice API's that will then override the default values taken 
@@ -45,6 +45,10 @@
 // NOTES: 
 //   This code is completely and shamelessly ripped off from Calvin Hass's 
 //   "diag_and_touch_calib.ino".
+//
+//   Flash Storage requires the library:
+//   https://github.com/cmaglie/FlashStorage and has been tested with
+//   ARM Cortex M0+ based board 
 //
 //   This routine will work with any touch interface supported by the GUIslice library.
 //   By default, a TFT display may not require calibration (eg. capacitive touch),
@@ -107,7 +111,7 @@
 // =======================================================================
 /// \file TFT_Calibration.h 
 
-
+#pragma once
 #ifndef _TFT_CALIBRATION_H
 #define _TFT_CALIBRATION_H
 
@@ -143,14 +147,15 @@
 // Defines
 // ------------------------------------------------------------
 // Uncomment one of the following lines to use either SD card or EEPROM
-//#define USE_SD_INTERFACE
-#define USE_EEPROM_INTERFACE
+#define USE_SD_INTERFACE
+//#define USE_EEPROM_INTERFACE
+//#define USE_FLASH_INTERFACE
 
 // - Set DEBUG_CALIB to >0 to enable detailed tracing via the Serial connection
 //   - DEBUG_CALIB 0 = Disable all messaging to serial monitor
 //   - DEBUG_CALIB 1 = Enable summary messaging
 //   - DEBUG_CALIB 2 = Enable detailed tracing for debugging
-#define DEBUG_CALIB  1
+#define DEBUG_CALIB  0 //!
 
 #define CALIB_DEBUG_PRINT(sFmt, ...)                    \
           do {                                                  \
@@ -159,9 +164,9 @@
             }                                                   \
           } while (0) 
  
-  #define CALIB_DEBUG2_PRINT(sFmt, ...)                          \
+#define CALIB_DEBUG2_PRINT(sFmt, ...)                          \
           do {                                                  \
-            if (DEBUG_ERR >= 2) {                               \
+            if (DEBUG_CALIB >= 2) {                               \
               gslc_DebugPrintf(sFmt,__VA_ARGS__);               \
             }                                                   \
           } while (0)
@@ -287,8 +292,10 @@ class TFT_Calibration {
     void init(gslc_tsGui* pGui, int16_t popupPage, char* fileName); 
 #elif defined(USE_EEPROM_INTERFACE)
     void init(gslc_tsGui* pGui, int16_t popupPage, int eeAddr /* EEPROM Address */); 
+#elif defined(USE_FLASH_INTERFACE)
+    void init(gslc_tsGui* pGui, int16_t popupPage);
 #else
-  #error MUST use either SD card or EEPROM to store calibration values
+  #error MUST use either SD card or EEPROM or Flash to store calibration values
 #endif    
     void update();              // update display
     void run();                 // run calibratio
@@ -298,6 +305,9 @@ class TFT_Calibration {
     
     void setStatus(eCalibrateStatus eStatus) { m_eStatus = eStatus; };
     eCalibrateStatus getStatus() { return m_eStatus; };  
+
+    void serialPrintStoredValues();
+    void serialPrintDefinedValues();
 
   protected:
     void loop();                 // Calibration loop()
@@ -333,6 +343,8 @@ class TFT_Calibration {
     char*        m_fileName;      // file that has calibration values
 #elif defined(USE_EEPROM_INTERFACE)
     int          m_eeAddr;        // EEPROM Address that holds calibration values
+#elif defined(USE_FLASH_INTERFACE)
+    bool         m_initial_Calib; //flag for initial calibration for flash
 #endif     
     gslc_tsGui*  m_pGui;          // pointer to all of GUIslice's state and content
     bool         m_bIsActive;     // boolean for is calibration running 
