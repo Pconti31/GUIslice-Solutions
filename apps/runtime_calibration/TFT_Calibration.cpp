@@ -6,18 +6,28 @@
 #if defined(USE_SD_INTERFACE)
   #include <SD.h>   // Include support for SD card access
   #include <SPI.h>
-#else
+#elif defined(USE_EEPROM_INTERFACE)
   #include <EEPROM.h>
   // MAGIC_VALUE allows us to test if eeprom values are set or not
   const uint16_t MAGIC_VALUE = 0xBCA5;  
+#else
+  #include <FlashStorage.h> //include support for writing to Flash Storage
+  FlashStorage(flsh_xMin, int16_t); //create space in flash to save xMin value
+  FlashStorage(flsh_xMax, int16_t); //create space in flash to save xMax value
+  FlashStorage(flsh_yMin, int16_t); //create space in flash to save yMin value
+  FlashStorage(flsh_yMax, int16_t); //create space in flash to save yMax value
+  FlashStorage(flsh_remapYX, int16_t); //create space in flash to save remapXY
+  FlashStorage(flsh_initial_Calib, bool); //create space in flash to save initial Calibration flag, defaults to false upon creation
 #endif
 
 #if defined(USE_SD_INTERFACE)
-void TFT_Calibration::init(gslc_tsGui* pGui, int16_t popupPage, char* fileName) {
-  m_fileName = fileName;
-#else
-void TFT_Calibration::init(gslc_tsGui* pGui, int16_t popupPage, int eeAddr) {
-  m_eeAddr = eeAddr;
+  void TFT_Calibration::init(gslc_tsGui* pGui, int16_t popupPage, char* fileName) {
+    m_fileName = fileName;
+#elif defined(USE_EEPROM_INTERFACE)
+  void TFT_Calibration::init(gslc_tsGui* pGui, int16_t popupPage, int eeAddr) {
+    m_eeAddr = eeAddr;
+#else //using Flash Storage
+  void TFT_Calibration::init(gslc_tsGui* pGui, int16_t popupPage) {
 #endif    
   m_pGui  = pGui;
   
@@ -55,7 +65,7 @@ void TFT_Calibration::init(gslc_tsGui* pGui, int16_t popupPage, int eeAddr) {
   } else {
     printDefinedValues();
   }
-#else
+#elif defined(USE_EEPROM_INTERFACE)
   uint16_t test_magic;
   
   EEPROM.get(eeAddr, test_magic);
@@ -74,6 +84,23 @@ void TFT_Calibration::init(gslc_tsGui* pGui, int16_t popupPage, int eeAddr) {
     printStoredValues();
     inform(); // let GUIslice know about our touch values
   } else {
+    printDefinedValues();
+  }
+#else //using Flash Storage
+  m_initial_Calib = flsh_initial_Calib.read(); //save calibration flag to variable
+  if (m_initial_Calib == true) //check if initial calibration during runtime has been performed
+  {
+    m_xMin = flsh_xMin.read(); //read xMin flash value from storage
+    m_xMax = flsh_xMax.read(); //read xMax flash value from storage
+    m_yMin = flsh_yMin.read(); //read yMin flash value from storage
+    m_yMax = flsh_yMax.read(); //read yMax flash value from storage
+    m_remapYX = flsh_remapYX.read(); //read remapXy value from storage
+    CALIB_DEBUG2_PRINT("Touch Config values from Flash\n", "");
+    printStoredValues();
+    inform();
+  }
+  else
+  {
     printDefinedValues();
   }
 #endif
@@ -454,7 +481,7 @@ void TFT_Calibration::storeValues() {
   values.write((byte*)&m_remapYX, sizeof(int16_t));
   values.close();
   CALIB_DEBUG_PRINT("Touch Calibration values written to SD file %s\n", m_fileName);
-#else
+#elif defined(USE_EEPROM_INTERFACE)
   int eeAddr = m_eeAddr;
   EEPROM.put(eeAddr, MAGIC_VALUE);
   eeAddr += sizeof(uint16_t);
@@ -469,6 +496,17 @@ void TFT_Calibration::storeValues() {
   EEPROM.put(eeAddr, m_remapYX);
   
   CALIB_DEBUG_PRINT("Touch Calibration values written EEPROM address %d\n", m_eeAddr);
+
+#else ///using Flash Storage
+  m_initial_Calib = true; //initial runtime calibration was succesful, write flag to true
+  flsh_xMin.write(m_xMin); //write Xmin value to Flash
+  flsh_xMax.write(m_xMax); //write Xmax value to Flash
+  flsh_yMin.write(m_yMin); //write Ymin value to Flash
+  flsh_yMax.write(m_yMax); //write Ymax value to Flash
+  flsh_remapYX.write(m_remapYX); //write remapYX value to Flash
+  flsh_initial_Calib.write(m_initial_Calib); //write initial calibration flag to flash
+
+  CALIB_DEBUG_PRINT("Touch Calibration values written to FLASH STORAGE %d\n", "");
 #endif
 }
 
@@ -485,6 +523,28 @@ void TFT_Calibration::printStoredValues() {
   CALIB_DEBUG2_PRINT("yMin=%d\n", m_yMin);
   CALIB_DEBUG2_PRINT("yMax=%d\n", m_yMax);
   CALIB_DEBUG2_PRINT("remapYX=%d\n",m_remapYX);
+}
+
+void TFT_Calibration::serialPrintStoredValues(){
+  Serial.print("xMin = ");
+  Serial.println(m_xMin);
+  Serial.print("xMax = ");
+  Serial.println(m_xMax);
+  Serial.print("yMin = ");
+  Serial.println(m_yMin);
+  Serial.print("yMax = ");
+  Serial.println(m_yMax);
+}
+
+void TFT_Calibration::serialPrintDefinedValues(){
+  Serial.print("ADATOUCH xMin = ");
+  Serial.println(ADATOUCH_X_MIN);
+  Serial.print("ADATOUCH xMax = ");
+  Serial.println(ADATOUCH_X_MAX);
+  Serial.print("ADATOUCH yMin = ");
+  Serial.println(ADATOUCH_Y_MIN);
+  Serial.print("ADATOUCH yMax = ");
+  Serial.println(ADATOUCH_Y_MAX);
 }
 
 void TFT_Calibration::printDefinedValues() {

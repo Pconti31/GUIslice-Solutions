@@ -19,7 +19,7 @@
 // - Runtime TFT Display Calibration Example:
 //   - Example of Application that can make use of touch screen
 //     calibrations for XMIN, XMAX, YMIN, YMAX values stored
-//     either on SD Card or in EEPROM thus overriding values stored in
+//     either on SD Card, EEPROM or Flash thus overriding values stored in
 //     compiled code taken from GUIslice/config/*.h files.
 //   - Expected behavior: Clicking on CALIBRATE button outputs a message
 //     along with instructions on how to calibrate your screen.
@@ -164,9 +164,11 @@ void setup()
   // ------------------------------------------------
 #if defined(USE_SD_INTERFACE)
   calibration.init(&m_gui, E_PG_POPUP1, (char *) "mydata.bin");
-#else
+#elif defined(USE_EEPROM_INTERFACE)
   // store calibration data at beginning of our EEPROM. 
   calibration.init(&m_gui, E_PG_POPUP1, 0);
+#else //using Flash Storage
+  calibration.init(&m_gui, E_PG_POPUP1);
 #endif  
 
 }
