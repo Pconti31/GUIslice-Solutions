@@ -506,7 +506,7 @@ void TFT_Calibration::storeValues() {
   flsh_remapYX.write(m_remapYX); //write remapYX value to Flash
   flsh_initial_Calib.write(m_initial_Calib); //write initial calibration flag to flash
 
-  CALIB_DEBUG_PRINT("Touch Calibration values written to FLASH STORAGE %d\n", "");
+  CALIB_DEBUG_PRINT("Touch Calibration values written to FLASH STORAGE\n", "");
 #endif
 }
 
