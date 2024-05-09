@@ -62,7 +62,7 @@ loop() {
  .
   
   if (calibration.isActive()) {
-    loop();
+    calibration.loop();
   } else {
     // Our ScreenMgr calls gslc_Update when required
     // DO NOT call it directly or your screen will get messed up!
