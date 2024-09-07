@@ -27,6 +27,7 @@ So I have gathered them here in one place to make them more accessible.
 
 Name | Demonstrates
 -----|------
+btn-physical | How to bind a physical key to a specific button element
 busywait | Animation that indicates task will run indeterminate length of time
 ContinuePress-Btn | Continueus Press of a Button
 drag-popup | Make a popup window draggable by a user
