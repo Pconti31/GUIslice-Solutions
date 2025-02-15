@@ -38,6 +38,7 @@ led-panel | How to use a Box with a Draw Callback to implementa panel of LEDs
 Longpress-Btn | How to make a Button run a motor only while being pressed
 no-flicker-graph | How to display your graphs without any major flicker
 ntp-test | Base page to create a status line and also use NTP Time Service
+passwd_input | How to make a Input Text field hide or show a password
 popup_input | How to use popup with input and validate data
 progress-percent | Progress Bar with embedded percent completed and no flicker
 runtime_calibration | Tune touch calibrations and read/store either SD Card, EEPROM, or flash
