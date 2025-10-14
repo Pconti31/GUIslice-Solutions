@@ -67,7 +67,9 @@ configuring the encoder pins as inputs with internal pull-ups like so:
 <p>
 A datasheet for this type of device shows the example wiring.
 </p>
-![](rotary_encoder_schematic.png)
+
+![](rotary_encoder_schematic.jpg)
+
 <p>
 The 0.01uf Capacitors will still be useful but don't expect them to a big help.
 The simple rotary encoders are just designed to very noisy. When you purchase them
