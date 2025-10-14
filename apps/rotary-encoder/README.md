@@ -9,12 +9,13 @@ and using popups.
 <p>
 This sample uses an inexpensive Rotary Encoder. Typically 20 to 24 detents.
 </p>
-![](images/Rotary_Encoder_pin Connection.png)
+
+![](Rotary_Encoder_pins.png)
 
 <p>
 The basic theory of using a Rotary Encoder with GUIslice is simular to the
 GUIslice example arduino/ex04_ard_ctrls_pin/ex04_ard_ctrls_pin.ino.
-The main difference is that yoy must first simmply a routine to 
+The main difference is that you must first supply a routine to 
 read the encoders A and B pins. 
 </p>
 
@@ -53,11 +54,6 @@ const int STATE_NEXT     = 3;
 ```
 
 <p>
-A datasheet for this type of device shows the example wiring.
-</p>
-![](images/rotary_encoder_schematic.png)
-
-<p>
 Now with many MCU's like the Arduino Mega you can skip the 10k resisters by simply
 configuring the encoder pins as inputs with internal pull-ups like so:
 </p>
@@ -69,6 +65,8 @@ configuring the encoder pins as inputs with internal pull-ups like so:
 ```
 
 <p>
+A datasheet for this type of device shows the example wiring.
+![](images/rotary_encoder_schematic.png)
 The 0.01uf Capacitors will still be useful but don't expect them to a big help.
 The simple rotary encoders are just designed to very noisy. When you purchase them
 for your project maybe buy extras and test them to see which perform the best. 
@@ -79,7 +77,7 @@ My sample tries to work around the noise with a software filter.
 It really helps to ignore many false readings. 
 For a detailed explanation see:
 </p>
-![Arduino Interfaces: Rotary Encoder](https://www.best-microcontroller-projects.com/rotary-encoder.html)
+https://www.best-microcontroller-projects.com/rotary-encoder.html
 
 <p>
 Like other GUIslice examples I also use the EasyButton library to read the button
